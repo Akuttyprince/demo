@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catch the Falling Object Game</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #333;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+
+    #gameArea {
+      position: relative;
+      width: 400px;
+      height: 600px;
+      background-color: #222;
+      overflow: hidden;
+      border: 2px solid #fff;
+    }
+
+    #player {
+      position: absolute;
+      bottom: 10px;
+      width: 60px;
+      height: 20px;
+      background-color: #0f0;
+      left: 170px;
+    }
+
+    .object {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      background-color: #f00;
+    }
+  </style>
+</head>
+<body>
+  <div id="gameArea">
+    <div id="player"></div>
+  </div>
+
+  <script>
+    const gameArea = document.getElementById('gameArea');
+    const player = document.getElementById('player');
+    const playerSpeed = 20;
+    let playerPosition = 170;
+    let objects = [];
+    let score = 0;
+
+    // Move player with arrow keys
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' && playerPosition > 0) {
+        playerPosition -= playerSpeed;
+      } else if (e.key === 'ArrowRight' && playerPosition < gameArea.offsetWidth - player.offsetWidth) {
+        playerPosition += playerSpeed;
+      }
+      player.style.left = playerPosition + 'px';
+    });
+
+    // Spawn falling object at random positions
+    function spawnObject() {
+      const object = document.createElement('div');
+      object.classList.add('object');
+      object.style.left = Math.floor(Math.random() * (gameArea.offsetWidth - 30)) + 'px';
+      object.style.top = '0px';
+      gameArea.appendChild(object);
+      objects.push(object);
+    }
+
+    // Move objects down and check for catch or miss
+    function moveObjects() {
+      objects.forEach((object, index) => {
+        let objectTop = parseInt(object.style.top);
+        object.style.top = objectTop + 5 + 'px';
+
+        if (objectTop > gameArea.offsetHeight) {
+          object.remove();
+          objects.splice(index, 1);
+          alert('Game Over! Score: ' + score);
+          window.location.reload();
+        } else if (isCaught(object)) {
+          score++;
+          object.remove();
+          objects.splice(index, 1);
+          console.log('Score:', score);
+        }
+      });
+    }
+
+    // Check if player catches the object
+    function isCaught(object) {
+      const playerRect = player.getBoundingClientRect();
+      const objectRect = object.getBoundingClientRect();
+
+      return !(
+        playerRect.top > objectRect.bottom ||
+        playerRect.bottom < objectRect.top ||
+        playerRect.right < objectRect.left ||
+        playerRect.left > objectRect.right
+      );
+    }
+
+    // Game loop
+    function gameLoop() {
+      moveObjects();
+      requestAnimationFrame(gameLoop);
+    }
+
+    // Start game
+    setInterval(spawnObject, 1000);
+    gameLoop();
+  </script>
+</body>
+</html>

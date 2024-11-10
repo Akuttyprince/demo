@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Hover Effect</title>
+  <style>
+    /* Container styling */
+    .image-container {
+      position: relative;
+      width: 300px; /* Set the width you want */
+      height: 200px; /* Set the height you want */
+      overflow: hidden;
+    }
+
+    /* Image styling */
+    .image-container img {
+      width: 100%;
+      height: 100%;
+      transition: transform 0.5s ease; /* Smooth zoom effect */
+    }
+
+    /* Text overlay styling */
+    .image-container .overlay-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8); /* Initial scale for zoom-out effect */
+      color: #fff;
+      font-size: 1.5em;
+      font-weight: bold;
+      opacity: 0;
+      transition: transform 0.5s ease, opacity 0.5s ease;
+      pointer-events: none; /* Prevents the text from interfering with hover */
+    }
+
+    /* Hover effect */
+    .image-container:hover img {
+      transform: scale(0.65); /* Zoom-out effect on image */
+    }
+
+    .image-container:hover .overlay-text {
+      opacity: 1;
+      transform: translate(-50%,-50%) scale(2); /* Zoom-out effect on text */
+    }
+  </style>
+</head>
+<body>
+
+  <div class="image-container">
+    <img src="images/1.jpg" alt="Sample Image">
+    <div class="overlay-text">Hello World</div>
+  </div>
+
+</body>
+</html>
